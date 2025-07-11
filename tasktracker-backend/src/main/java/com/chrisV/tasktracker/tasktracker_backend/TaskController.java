@@ -15,6 +15,7 @@ public class TaskController {
 
     @GetMapping
     public List<Task> getTasks() {
+        System.out.println("GET /api/tasks was called");
         return repo.findAll();
     }
 
@@ -35,4 +36,5 @@ public class TaskController {
     public void deleteTask(@PathVariable Long id) {
         repo.deleteById(id);
     }
+
 }
