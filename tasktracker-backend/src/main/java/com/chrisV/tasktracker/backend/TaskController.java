@@ -1,4 +1,4 @@
-package com.chrisV.tasktracker.tasktracker_backend;
+package com.chrisV.tasktracker.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
