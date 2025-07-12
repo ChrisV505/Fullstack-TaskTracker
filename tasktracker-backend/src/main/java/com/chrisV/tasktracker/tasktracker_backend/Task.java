@@ -16,6 +16,9 @@ public class Task {
     private String title;
     private boolean completed;
 
+    @ManyToOne
+    private Project project;
+
     public Task() {}
 
     public Task(String tile, boolean completed) {
