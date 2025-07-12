@@ -34,7 +34,7 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
-        repo.deleteById(id);
+        repo.existsById(id); 
+    
     }
-
 }
