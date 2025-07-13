@@ -18,27 +18,29 @@ public class TaskController {
     @Autowired
     private ProjectRepository projectRepo;
 
+    //GET all tasks data
     @GetMapping
     public List<Task> getTasks() {
         System.out.println("GET /api/tasks was called");
         return taskRepo.findAll();
     }
 
-    @PostMapping("/tasks")
+    //POST one task entity
+    @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         Long projectId = task.getProject().getId();
 
         Optional<Project> projectOpt = projectRepo.findById(projectId);
         if(!projectOpt.isPresent()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build() ;
         }
         
         task.setProject((projectOpt.get()));
         Task savedTask = taskRepo.save(task);
         return ResponseEntity.ok(savedTask);
-
     }
 
+    //UPDATE one task entity by id
     @PutMapping("/{id}")
     public Task updateTask(@PathVariable Long id, @RequestBody Task data) {
         Task task = taskRepo.findById(id).orElseThrow();
@@ -47,9 +49,9 @@ public class TaskController {
         return taskRepo.save(task);
     }
 
+    //DELETE one task entity by id
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
         taskRepo.existsById(id); 
-    
     }
 }

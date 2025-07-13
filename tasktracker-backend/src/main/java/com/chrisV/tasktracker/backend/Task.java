@@ -25,15 +25,17 @@ public class Task {
 
     public Task() {}
 
-    public Task(String tile, boolean completed) {
+    public Task(String tile, boolean completed, String priority, String description) {
         this.title = tile;
         this.completed = completed;
+        this.priority = priority;
+        this.description = description;
     }
     
     //getters
     public String getDescription() {return description;}
     public LocalDate getDueDate() {return dueDate;}
-    public String priority() {return priority;}
+    public String getPriority() {return priority;}
     public Long getId() {return id;}
     public String getTiltle() {return title;}
     public boolean isCompleted() {return completed;}
