@@ -1,8 +1,10 @@
 package com.chrisV.tasktracker.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,31 +24,59 @@ public class TaskController {
     //GET all tasks data
     @GetMapping
     public List<Task> getTasks() {
-        System.out.println("GET /api/tasks was called");
         return taskRepo.findAll();
+    }
+
+    //GET one task by Id
+    @GetMapping("{id}")
+    public Task getTask(@PathVariable Long id) {
+        return taskRepo.findById(id)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task of ID: " + id + " does not exist"));
     }
 
     //filter by priority
     @GetMapping("/filter")
     public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
-
         Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
         List<Task> tasks = taskRepo.findByPriority(priorityEnum);
 
         return tasks.stream()
                     .map(TaskDTO::fromEntity)
                     .collect(Collectors.toList());
-                    
     }
 
-    @GetMapping("/sorted")
-    public List<TaskDTO> sortByDueDate() {
+    @GetMapping("/filter1") 
+    public List<TaskDTO> filterbyPriorityAndCompletion(
+        @RequestParam(defaultValue = "HIGH") String priority, 
+        @RequestParam (defaultValue = "false") Boolean Completed) {
+        
+        Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
+        List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, Completed);
+
+        return tasks.stream()
+                    .map(TaskDTO::fromEntity)
+                    .collect(Collectors.toList());
+    }
+
+    //sort by due date ASC order
+    @GetMapping("/sorted/asc")
+    public List<TaskDTO> sortByDueDateAsc() {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateAsc();
 
         return tasks.stream()
                     .map(TaskDTO::fromEntity)
                     .collect(Collectors.toList());
     }
+
+    //sort by due date DESC order
+    @GetMapping("/sorted/desc")
+    public List<TaskDTO> sortByDueDateDes() {
+        List<Task> tasks = taskRepo.findAllByOrderByDueDateDesc();
+
+        return tasks.stream()
+                    .map(TaskDTO::fromEntity)
+                    .collect(Collectors.toList());
+    }    
 
     //POST one task entity
     @PostMapping

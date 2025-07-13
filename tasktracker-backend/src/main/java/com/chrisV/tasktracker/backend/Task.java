@@ -15,7 +15,7 @@ public class Task {
     private String description;
     private LocalDate dueDate;
     private String title;
-    private boolean completed;
+    private Boolean completed;
 
     @Enumerated(EnumType.STRING) //store/convert to "HIGH", "MEDIUM" in DB
     private Priority priority;
@@ -40,7 +40,7 @@ public class Task {
     public Priority getPriority() {return priority;}
     public Long getId() {return id;}
     public String getTiltle() {return title;}
-    public boolean isCompleted() {return completed;}
+    public Boolean isCompleted() {return completed;}
     public Project getProject() {return project;}
 
     //setters
@@ -49,6 +49,6 @@ public class Task {
     public void setPriority(Priority priority) {this.priority = priority;}
     public void setId(Long id) {this.id = id;}
     public void setTitle(String title) {this.title = title;}
-    public void setCompleted(boolean completed) {this.completed = completed;}
+    public void setCompleted(Boolean completed) {this.completed = completed;}
     public void setProject(Project project) {this.project = project;}
 }

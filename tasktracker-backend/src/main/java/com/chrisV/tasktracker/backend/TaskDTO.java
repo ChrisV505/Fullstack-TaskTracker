@@ -6,6 +6,7 @@ public class TaskDTO {
     private Long id;
     private String title;
     private Priority priority;
+    private Boolean completed;
     private LocalDate dueDate;
     private Long projectId;
     private String projectName;
@@ -16,6 +17,7 @@ public class TaskDTO {
         dto.setTitle(task.getTiltle());
         dto.setPriority(task.getPriority());
         dto.setDueDate(task.getDueDate());
+        dto.setCompleted(task.isCompleted());
         
         if(task.getProject() != null) {
             dto.setProjectId(task.getProject().getId());
@@ -23,6 +25,9 @@ public class TaskDTO {
         }
         return dto;
     }
+
+    public Boolean getCompleted() {return completed;}
+    public void setCompleted(Boolean completed) {this.completed = completed;}
 
     public LocalDate getDueDate() {return dueDate;}
     public void setDueDate(LocalDate duedate) {this.dueDate = duedate;}
