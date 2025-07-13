@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -23,6 +24,15 @@ public class TaskController {
     public List<Task> getTasks() {
         System.out.println("GET /api/tasks was called");
         return taskRepo.findAll();
+    }
+
+    @GetMapping("/filter")
+    public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
+
+        return taskRepo.findAll().stream()
+                    .filter(task -> task.getPriority().equalsIgnoreCase(priority))
+                    .map(TaskDTO::fromEntity)
+                    .collect(Collectors.toList());
     }
 
     //POST one task entity
