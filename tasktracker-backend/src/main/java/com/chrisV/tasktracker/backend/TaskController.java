@@ -1,9 +1,11 @@
 package com.chrisV.tasktracker.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -22,18 +24,19 @@ public class TaskController {
         return taskRepo.findAll();
     }
 
-    @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        if(task.getProject() != null && task.getProject().getId() != null) {
-            Long projectId = task.getProject().getId();
+    @PostMapping("/tasks")
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Long projectId = task.getProject().getId();
 
-            //fetch project from DB
-            Project realProject = projectRepo.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project with ID: " + projectId + "does not exist"));
-
-            //set new real project 
-            task.setProject(realProject);
+        Optional<Project> projectOpt = projectRepo.findById(projectId);
+        if(!projectOpt.isPresent()) {
+            return ResponseEntity.badRequest().build();
         }
-        return taskRepo.save(task);
+        
+        task.setProject((projectOpt.get()));
+        Task savedTask = taskRepo.save(task);
+        return ResponseEntity.ok(savedTask);
+
     }
 
     @PutMapping("/{id}")

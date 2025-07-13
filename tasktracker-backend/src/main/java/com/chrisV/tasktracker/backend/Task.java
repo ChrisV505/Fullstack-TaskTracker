@@ -3,6 +3,8 @@ package com.chrisV.tasktracker.backend;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Task {
     
@@ -17,6 +19,8 @@ public class Task {
     private boolean completed;
 
     @ManyToOne
+    @JoinColumn(name = "project_id")
+    @JsonBackReference
     private Project project;
 
     public Task() {}

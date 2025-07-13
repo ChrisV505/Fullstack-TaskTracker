@@ -1,5 +1,9 @@
 package com.chrisV.tasktracker.backend;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +14,10 @@ public class Project {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Task> tasks;
 
     //constructors
     public Project() {}
