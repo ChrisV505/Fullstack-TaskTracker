@@ -33,6 +33,7 @@ public class Task {
     public Long getId() {return id;}
     public String getTiltle() {return title;}
     public boolean isCompleted() {return completed;}
+    public Project getProject() {return project;}
 
     //setters
     public void setDescription(String description) {this.description = description;}
@@ -41,4 +42,5 @@ public class Task {
     public void setId(Long id) {this.id = id;}
     public void setTitle(String title) {this.title = title;}
     public void setCompleted(boolean completed) {this.completed = completed;}
+    public void setProject(Project project) {this.project = project;}
 }

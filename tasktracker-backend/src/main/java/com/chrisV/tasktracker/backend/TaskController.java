@@ -11,30 +11,42 @@ import java.util.List;
 public class TaskController {
 
     @Autowired
-    private TaskRepository repo;
+    private TaskRepository taskRepo;
+
+    @Autowired
+    private ProjectRepository projectRepo;
 
     @GetMapping
     public List<Task> getTasks() {
         System.out.println("GET /api/tasks was called");
-        return repo.findAll();
+        return taskRepo.findAll();
     }
 
     @PostMapping
     public Task createTask(@RequestBody Task task) {
-        return repo.save(task);
+        if(task.getProject() != null && task.getProject().getId() != null) {
+            Long projectId = task.getProject().getId();
+
+            //fetch project from DB
+            Project realProject = projectRepo.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project with ID: " + projectId + "does not exist"));
+
+            //set new real project 
+            task.setProject(realProject);
+        }
+        return taskRepo.save(task);
     }
 
     @PutMapping("/{id}")
     public Task updateTask(@PathVariable Long id, @RequestBody Task data) {
-        Task task = repo.findById(id).orElseThrow();
+        Task task = taskRepo.findById(id).orElseThrow();
         task.setTitle(data.getTiltle());
         task.setCompleted(data.isCompleted());
-        return repo.save(task);
+        return taskRepo.save(task);
     }
 
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
-        repo.existsById(id); 
+        taskRepo.existsById(id); 
     
     }
 }
