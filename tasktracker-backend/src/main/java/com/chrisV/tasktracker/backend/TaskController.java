@@ -26,14 +26,26 @@ public class TaskController {
         return taskRepo.findAll();
     }
 
+    //filter by priority
     @GetMapping("/filter")
-    public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")Priority priority) {
+    public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
 
-        return taskRepo.findAll().stream()
-                    .filter(task -> task.getPriority().equals(priority))
+        Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
+        List<Task> tasks = taskRepo.findByPriority(priorityEnum);
+
+        return tasks.stream()
                     .map(TaskDTO::fromEntity)
                     .collect(Collectors.toList());
                     
+    }
+
+    @GetMapping("/sorted")
+    public List<TaskDTO> sortByDueDate() {
+        List<Task> tasks = taskRepo.findAllByOrderByDueDateAsc();
+
+        return tasks.stream()
+                    .map(TaskDTO::fromEntity)
+                    .collect(Collectors.toList());
     }
 
     //POST one task entity
