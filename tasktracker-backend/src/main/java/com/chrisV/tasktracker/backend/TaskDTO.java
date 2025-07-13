@@ -5,28 +5,10 @@ import java.time.LocalDate;
 public class TaskDTO {
     private Long id;
     private String title;
-    private String priority;
+    private Priority priority;
     private LocalDate dueDate;
     private Long projectId;
     private String projectName;
-
-    public LocalDate getDueDate() {return dueDate;}
-    public void setDueDate(LocalDate duedate) {this.dueDate = duedate;}
-
-    public Long getId() {return id;}
-    public void setId(Long id) {this.id = id;}
-
-    public String getTitle() {return title;}
-    public void setTitle(String title) {this.title = title;}
-    
-    public String getPriority() {return priority;}
-    public void setPriority(String priority) {this.priority = priority;}
-
-    public Long getProjectId() {return projectId;}
-    public void setProjectId(Long projectId) {this.projectId = projectId;}
-
-    public String getProjectName() {return projectName;}
-    public void setProjectName(String projectName) {this.projectName = projectName;}
 
     public static TaskDTO fromEntity(Task task) {
         TaskDTO dto = new TaskDTO();
@@ -40,6 +22,23 @@ public class TaskDTO {
             dto.setProjectName(task.getProject().getName());
         }
         return dto;
-        
     }
+
+    public LocalDate getDueDate() {return dueDate;}
+    public void setDueDate(LocalDate duedate) {this.dueDate = duedate;}
+
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
+
+    public String getTitle() {return title;}
+    public void setTitle(String title) {this.title = title;}
+    
+    public Priority getPriority() {return priority;}
+    public void setPriority(Priority priority) {this.priority = priority;}
+
+    public Long getProjectId() {return projectId;}
+    public void setProjectId(Long projectId) {this.projectId = projectId;}
+
+    public String getProjectName() {return projectName;}
+    public void setProjectName(String projectName) {this.projectName = projectName;}
 }

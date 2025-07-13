@@ -27,12 +27,13 @@ public class TaskController {
     }
 
     @GetMapping("/filter")
-    public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
+    public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")Priority priority) {
 
         return taskRepo.findAll().stream()
-                    .filter(task -> task.getPriority().equalsIgnoreCase(priority))
+                    .filter(task -> task.getPriority().equals(priority))
                     .map(TaskDTO::fromEntity)
                     .collect(Collectors.toList());
+                    
     }
 
     //POST one task entity
