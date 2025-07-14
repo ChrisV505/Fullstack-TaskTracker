@@ -48,7 +48,9 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     public void deleteProject(@PathVariable Long id) {
         projectRepo.existsById(id);
+        projectRepo.deleteById(id);
+
+
+        throw new IllegalArgumentException("project with Id: " + id + " does not exist");
     }
-
-
 }

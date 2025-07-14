@@ -104,7 +104,11 @@ public class TaskController {
 
     //DELETE one task entity by id
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
-        taskRepo.existsById(id); 
+    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+        if(taskRepo.existsById(id)) {
+            taskRepo.deleteById(id);
+            return ResponseEntity.ok("task deleted");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not foud");
     }
 }
