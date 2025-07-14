@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = "*") //allow front-end access
+@CrossOrigin(origins = "http://localhost:5173") //allow front-end access
 public class TaskController {
 
     @Autowired
@@ -23,8 +23,12 @@ public class TaskController {
 
     //GET all tasks data
     @GetMapping
-    public List<Task> getTasks() {
-        return taskRepo.findAll();
+    public List<TaskDTO> getTasks() {
+        List<Task> tasks = taskRepo.findAll();
+        
+        return tasks.stream()
+                    .map(TaskDTO::fromEntity)
+                    .collect(Collectors.toList());
     }
 
     //GET one task by Id
