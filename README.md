@@ -1,4 +1,4 @@
-# 💰 Full-Stack Financial Tracker
+# Full-Stack Financial Tracker
 
 A full-featured financial tracker web app built with **Spring Boot (Java)** on the backend and **React** on the frontend. This project allows users to manage tasks and projects, track income and expenses, and visualize transactions like a roadmap.
 
