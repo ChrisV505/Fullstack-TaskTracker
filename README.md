@@ -74,6 +74,7 @@ cp .env.example .env
 
 # Run the app
 ./mvnw spring-boot:
+```
 
 ---
 
