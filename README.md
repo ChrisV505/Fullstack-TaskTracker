@@ -33,7 +33,7 @@ This project allows users to manage tasks and projects, track income and expense
 | Database      | MySQL                                  |
 | Build Tools   | Maven, npm                             |
 | Version Control | Git, GitHub                          |
-| Dev Tools     | VS Code, IntelliJ IDEA, Postman        |
+| Dev Tools     | VS Code, Postman        |
 
 ---
 
