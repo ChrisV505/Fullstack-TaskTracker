@@ -27,7 +27,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findAll();
         
         return tasks.stream()
-                    .map(TaskDTO::fromEntity)
+                    .map(TaskMapper::fromEntity)
                     .collect(Collectors.toList());
     }
 
@@ -45,7 +45,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findByPriority(priorityEnum);
 
         return tasks.stream()
-                    .map(TaskDTO::fromEntity)
+                    .map(TaskMapper::fromEntity)
                     .collect(Collectors.toList());
     }
 
@@ -58,7 +58,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, Completed);
 
         return tasks.stream()
-                    .map(TaskDTO::fromEntity)
+                    .map(TaskMapper::fromEntity)
                     .collect(Collectors.toList());
     }
 
@@ -68,7 +68,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateAsc();
 
         return tasks.stream()
-                    .map(TaskDTO::fromEntity)
+                    .map(TaskMapper::fromEntity)
                     .collect(Collectors.toList());
     }
 
@@ -78,7 +78,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateDesc();
 
         return tasks.stream()
-                    .map(TaskDTO::fromEntity)
+                    .map(TaskMapper::fromEntity)
                     .collect(Collectors.toList());
     }    
 
@@ -99,11 +99,17 @@ public class TaskController {
 
     //UPDATE one task entity by id
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task data) {
-        Task task = taskRepo.findById(id).orElseThrow();
-        task.setTitle(data.getTiltle());
-        task.setCompleted(data.isCompleted());
-        return taskRepo.save(task);
+    public TaskDTO updateTask(@PathVariable Long id, @RequestBody TaskDTO data) {
+        Task existingTask = taskRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found"));
+
+        Project project = projectRepo.findById(data.getProject().getId())
+            .orElseThrow(() -> new IllegalArgumentException("Project with ID " + data.getProject().getId() + " not found"));
+        // Update the existing task in-place using the DTO and Project
+        TaskMapper.updateEntity(existingTask, data, project);
+
+        Task saved = taskRepo.save(existingTask);
+        return TaskMapper.fromEntity(saved);
     }
 
     //DELETE one task entity by id
