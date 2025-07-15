@@ -1,6 +1,8 @@
-package com.chrisV.tasktracker.backend;
+package com.chrisV.tasktracker.backend.dto;
 
 import java.time.LocalDate;
+
+import com.chrisV.tasktracker.backend.model.Priority;
 
 public class TaskDTO {
 

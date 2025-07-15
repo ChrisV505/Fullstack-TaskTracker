@@ -1,10 +1,18 @@
-package com.chrisV.tasktracker.backend;
+package com.chrisV.tasktracker.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.chrisV.tasktracker.backend.dto.TaskDTO;
+import com.chrisV.tasktracker.backend.mapper.TaskMapper;
+import com.chrisV.tasktracker.backend.model.Priority;
+import com.chrisV.tasktracker.backend.model.Project;
+import com.chrisV.tasktracker.backend.model.Task;
+import com.chrisV.tasktracker.backend.repository.ProjectRepository;
+import com.chrisV.tasktracker.backend.repository.TaskRepository;
 
 import java.util.List;
 import java.util.Optional;

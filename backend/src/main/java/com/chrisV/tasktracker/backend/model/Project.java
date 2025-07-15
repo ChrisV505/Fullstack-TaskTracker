@@ -1,4 +1,4 @@
-package com.chrisV.tasktracker.backend;
+package com.chrisV.tasktracker.backend.model;
 
 import java.util.List;
 

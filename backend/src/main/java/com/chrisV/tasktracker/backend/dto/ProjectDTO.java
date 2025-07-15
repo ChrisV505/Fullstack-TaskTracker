@@ -1,4 +1,4 @@
-package com.chrisV.tasktracker.backend;
+package com.chrisV.tasktracker.backend.dto;
 
 public class ProjectDTO {
     private Long id;

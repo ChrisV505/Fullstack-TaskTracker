@@ -1,8 +1,11 @@
-package com.chrisV.tasktracker.backend;
+package com.chrisV.tasktracker.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.chrisV.tasktracker.backend.model.Project;
+import com.chrisV.tasktracker.backend.repository.ProjectRepository;
 
 import java.util.List;
 import java.util.Optional;
