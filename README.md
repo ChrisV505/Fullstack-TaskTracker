@@ -1,6 +1,9 @@
 # Full-Stack Financial Tracker
 
-A full-featured financial tracker web app built with **Spring Boot (Java)** on the backend and **React** on the frontend. This project allows users to manage tasks and projects, track income and expenses, and visualize transactions like a roadmap.
+A full-featured financial tracker web app built with **Spring Boot (Java)** on the backend and **React (Vite + JavaScript)** on the frontend. 
+This project allows users to manage tasks and projects, track income and expenses, and visualize transactions like a roadmap.
+
+---
 
 ## Features
 
@@ -12,15 +15,27 @@ A full-featured financial tracker web app built with **Spring Boot (Java)** on t
 - Environment variable support via `.env`
 - Error handling and validation
 
+### Frontend (React + Vite)
+- Fast, modern React setup using Vite
+- Fetch and display tasks and projects from backend API (PLANNED)
+- Dynamic form handling for task and project creation (PLANNED)
+- Styled components for consistent UI (PLANNED)
+- Environment variable support for API URLs (PLANNED)
+
+---
+
 ## Technologies Used
 
-| Layer        | Stack                        |
-|-------------|------------------------------|
-| Backend      | Java, Spring Boot, Spring Data JPA |
-| Database     | MySQL                        |
-| Build Tools  | Maven, npm                   |
-| Version Control | Git, GitHub               |
-| Dev Tools    | VS Code, IntelliJ IDEA, Postman |
+| Layer         | Stack                                  |
+|---------------|-----------------------------------------|
+| Frontend      | React, Vite, JavaScript, CSS           |
+| Backend       | Java, Spring Boot, Spring Data JPA     |
+| Database      | MySQL                                  |
+| Build Tools   | Maven, npm                             |
+| Version Control | Git, GitHub                          |
+| Dev Tools     | VS Code, IntelliJ IDEA, Postman        |
+
+---
 
 ## Endpoints Overview
 
@@ -36,12 +51,17 @@ A full-featured financial tracker web app built with **Spring Boot (Java)** on t
 
 > Note: DTOs are used to return only relevant fields from `Task` and `Project` entities.
 
+---
+
 ## Getting Started
 
 ### Prerequisites
 
 - Java 21+
+- Node.js and npm
 - MySQL installed and running
+
+---
 
 ### Backend Setup
 
@@ -53,4 +73,15 @@ cd backend
 cp .env.example .env
 
 # Run the app
-./mvnw spring-boot:run
+./mvnw spring-boot:
+
+---
+
+### Frontend Setup
+
+```bash
+# Navigate to frontend folder
+cd frontend
+
+# Run the app
+npm run dev
