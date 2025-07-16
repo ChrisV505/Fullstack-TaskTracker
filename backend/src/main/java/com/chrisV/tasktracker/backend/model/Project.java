@@ -2,6 +2,7 @@ package com.chrisV.tasktracker.backend.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -19,6 +20,11 @@ public class Project {
     @JsonManagedReference
     private List<Task> tasks;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
+
     //constructors
     public Project() {}
 
@@ -32,4 +38,7 @@ public class Project {
 
     public void setId(Long id) {this.id = id;}
     public void setName(String name) {this.name = name;}
+
+    public User getUser() {return user;}
+    public void setUser(User user) {this.user = user;}
 }
