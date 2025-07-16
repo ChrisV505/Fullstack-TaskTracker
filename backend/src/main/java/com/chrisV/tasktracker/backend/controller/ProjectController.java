@@ -20,7 +20,7 @@ public class ProjectController {
     //GET all projects
     @GetMapping
     public List<Project> getProjects() {
-        System.out.println("GET /api/tasks/projects was called");
+        System.out.println("GET /api/projects was called");
         return projectRepo.findAll();
     }
 
