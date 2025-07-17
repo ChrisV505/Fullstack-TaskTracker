@@ -31,7 +31,7 @@ public class ProjectController {
         List<Project> projects = projectRepo.findAll();
 
         return projects.stream()
-                        .map(ProjectMapper::fromEntity)
+                        .map(ProjectMapper::fromEntityProject)
                         .collect(Collectors.toList());
     }
 
@@ -42,6 +42,7 @@ public class ProjectController {
         if(!projectOpt.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(projectOpt.get());
     }
 
