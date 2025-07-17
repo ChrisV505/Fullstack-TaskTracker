@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.chrisV.tasktracker.backend.dto.ProjectDTO;
+import com.chrisV.tasktracker.backend.mapper.ProjectMapper;
 import com.chrisV.tasktracker.backend.model.Project;
 import com.chrisV.tasktracker.backend.model.User;
 import com.chrisV.tasktracker.backend.repository.ProjectRepository;
@@ -11,6 +13,7 @@ import com.chrisV.tasktracker.backend.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -24,9 +27,12 @@ public class ProjectController {
 
     //GET all projects
     @GetMapping
-    public List<Project> getProjects() {
-        System.out.println("GET /api/projects was called");
-        return projectRepo.findAll();
+    public List<ProjectDTO> getProjects() {
+        List<Project> projects = projectRepo.findAll();
+
+        return projects.stream()
+                        .map(ProjectMapper::fromEntity)
+                        .collect(Collectors.toList());
     }
 
     //GET one project data
@@ -66,7 +72,6 @@ public class ProjectController {
     public void deleteProject(@PathVariable Long id) {
         projectRepo.existsById(id);
         projectRepo.deleteById(id);
-
 
         throw new IllegalArgumentException("project with Id: " + id + " does not exist");
     }
