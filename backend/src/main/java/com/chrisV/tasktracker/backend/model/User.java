@@ -19,7 +19,7 @@ public class User {
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Project> tasks; 
+    private List<Project> projects; 
 
     //constructor
     public User() {}
