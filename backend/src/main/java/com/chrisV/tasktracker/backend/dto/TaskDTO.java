@@ -14,7 +14,7 @@ public class TaskDTO {
     private Priority priority;
     private Boolean completed;
     private LocalDate dueDate;
-    private ProjectDTO project;
+    private SimpleProjectDTO project;
 
     //getter and setters
     public String getDescription() {return description;}
@@ -35,6 +35,6 @@ public class TaskDTO {
     public Priority getPriority() {return priority;}
     public void setPriority(Priority priority) {this.priority = priority;}
 
-    public ProjectDTO getProject() {return project;}
-    public void setProject(ProjectDTO project) {this.project = project;}
+    public SimpleProjectDTO getProject() {return project;}
+    public void setProject(SimpleProjectDTO project) {this.project = project;}
 }

@@ -1,6 +1,6 @@
 package com.chrisV.tasktracker.backend.mapper;
 
-import com.chrisV.tasktracker.backend.dto.ProjectDTO;
+import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
 import com.chrisV.tasktracker.backend.dto.TaskDTO;
 import com.chrisV.tasktracker.backend.model.Project;
 import com.chrisV.tasktracker.backend.model.Task;
@@ -16,7 +16,7 @@ public class TaskMapper {
         dto.setPriority(task.getPriority());
         dto.setDueDate(task.getDueDate());
         dto.setCompleted(task.isCompleted());
-        dto.setProject(new ProjectDTO(task.getProject()));
+        dto.setProject(new SimpleProjectDTO(task.getProject()));
         return dto;
     }
 
