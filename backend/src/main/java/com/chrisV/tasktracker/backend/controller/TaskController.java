@@ -35,7 +35,7 @@ public class TaskController {
     public List<SimpleTaskDTO> getTasks() {
         List<Task> tasks = taskRepo.findAll();
         return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleUser)
+                    .map(TaskMapper::fromEntitySimpleTask)
                     .collect(Collectors.toList());
     }
 
@@ -53,7 +53,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findByPriority(priorityEnum);
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleUser)
+                    .map(TaskMapper::fromEntitySimpleTask)
                     .collect(Collectors.toList());
     }
 
@@ -66,7 +66,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, Completed);
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleUser)
+                    .map(TaskMapper::fromEntitySimpleTask)
                     .collect(Collectors.toList());
     }
 
@@ -76,7 +76,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateAsc();
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleUser)
+                    .map(TaskMapper::fromEntitySimpleTask)
                     .collect(Collectors.toList());
     }
 
@@ -86,7 +86,7 @@ public class TaskController {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateDesc();
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleUser)
+                    .map(TaskMapper::fromEntitySimpleTask)
                     .collect(Collectors.toList());
     }    
 
@@ -117,7 +117,7 @@ public class TaskController {
         TaskMapper.updateEntity(existingTask, data, project);
 
         Task saved = taskRepo.save(existingTask);
-        return TaskMapper.fromEntityNestUser(saved);
+        return TaskMapper.fromEntityNestTask(saved);
     }
 
 @PatchMapping("/{id}")
@@ -137,7 +137,7 @@ public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskDTO data) {
     }
 
     Task saved = taskRepo.save(task);
-    return TaskMapper.fromEntityNestUser(saved);
+    return TaskMapper.fromEntityNestTask(saved);
 }
 
     //DELETE one task entity by id

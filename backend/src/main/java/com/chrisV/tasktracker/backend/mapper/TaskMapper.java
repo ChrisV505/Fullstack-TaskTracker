@@ -9,7 +9,7 @@ import com.chrisV.tasktracker.backend.model.Task;
 public class TaskMapper {
 
     // Convert Task entity to TaskDTO
-    public static TaskDTO fromEntityNestUser(Task task) {
+    public static TaskDTO fromEntityNestTask(Task task) {
         TaskDTO dto = new TaskDTO();
         dto.setId(task.getId());
         dto.setTitle(task.getTiltle());
@@ -21,7 +21,7 @@ public class TaskMapper {
         return dto;
     }
 
-    public static SimpleTaskDTO fromEntitySimpleUser(Task task) {
+    public static SimpleTaskDTO fromEntitySimpleTask(Task task) {
         SimpleTaskDTO dto = new SimpleTaskDTO();
         dto.setId(task.getId());
         dto.setTitle(task.getTiltle());

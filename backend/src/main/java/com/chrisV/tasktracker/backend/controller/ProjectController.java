@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.chrisV.tasktracker.backend.dto.ProjectDTO;
+//import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
 import com.chrisV.tasktracker.backend.mapper.ProjectMapper;
 import com.chrisV.tasktracker.backend.model.Project;
