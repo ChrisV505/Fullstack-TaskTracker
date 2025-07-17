@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.chrisV.tasktracker.backend.dto.SimpleTaskDTO;
 import com.chrisV.tasktracker.backend.dto.TaskDTO;
 import com.chrisV.tasktracker.backend.mapper.TaskMapper;
 import com.chrisV.tasktracker.backend.model.Priority;
@@ -31,11 +32,10 @@ public class TaskController {
 
     //GET all tasks data
     @GetMapping
-    public List<TaskDTO> getTasks() {
+    public List<SimpleTaskDTO> getTasks() {
         List<Task> tasks = taskRepo.findAll();
-        
         return tasks.stream()
-                    .map(TaskMapper::fromEntity)
+                    .map(TaskMapper::fromEntitySimple)
                     .collect(Collectors.toList());
     }
 
@@ -48,17 +48,17 @@ public class TaskController {
 
     //filter by priority
     @GetMapping("/filter")
-    public List<TaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
+    public List<SimpleTaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
         Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
         List<Task> tasks = taskRepo.findByPriority(priorityEnum);
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntity)
+                    .map(TaskMapper::fromEntitySimple)
                     .collect(Collectors.toList());
     }
 
     @GetMapping("/filter1") 
-    public List<TaskDTO> filterbyPriorityAndCompletion(
+    public List<SimpleTaskDTO> filterbyPriorityAndCompletion(
         @RequestParam(defaultValue = "HIGH") String priority, 
         @RequestParam (defaultValue = "false") Boolean Completed) {
         
@@ -66,27 +66,27 @@ public class TaskController {
         List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, Completed);
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntity)
+                    .map(TaskMapper::fromEntitySimple)
                     .collect(Collectors.toList());
     }
 
     //sort by due date ASC order
     @GetMapping("/sorted/asc")
-    public List<TaskDTO> sortByDueDateAsc() {
+    public List<SimpleTaskDTO> sortByDueDateAsc() {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateAsc();
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntity)
+                    .map(TaskMapper::fromEntitySimple)
                     .collect(Collectors.toList());
     }
 
     //sort by due date DESC order
     @GetMapping("/sorted/desc")
-    public List<TaskDTO> sortByDueDateDes() {
+    public List<SimpleTaskDTO> sortByDueDateDes() {
         List<Task> tasks = taskRepo.findAllByOrderByDueDateDesc();
 
         return tasks.stream()
-                    .map(TaskMapper::fromEntity)
+                    .map(TaskMapper::fromEntitySimple)
                     .collect(Collectors.toList());
     }    
 
@@ -117,7 +117,7 @@ public class TaskController {
         TaskMapper.updateEntity(existingTask, data, project);
 
         Task saved = taskRepo.save(existingTask);
-        return TaskMapper.fromEntity(saved);
+        return TaskMapper.fromEntityNest(saved);
     }
 
 @PatchMapping("/{id}")
@@ -137,7 +137,7 @@ public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskDTO data) {
     }
 
     Task saved = taskRepo.save(task);
-    return TaskMapper.fromEntity(saved);
+    return TaskMapper.fromEntityNest(saved);
 }
 
     //DELETE one task entity by id
