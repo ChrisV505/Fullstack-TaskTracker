@@ -16,6 +16,7 @@ public class TaskDTO {
     private LocalDate dueDate;
     private ProjectDTO project;
 
+    //getter and setters
     public String getDescription() {return description;}
     public void setDescription(String description) {this.description = description;}
 

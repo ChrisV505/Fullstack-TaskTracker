@@ -10,9 +10,7 @@ public class ProjectMapper {
         ProjectDTO dto = new ProjectDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
-        dto.setUser(new UserDTO(project.getUser().getId(),
-                    project.getUser().getName(),
-                    project.getUser().getEmail()));
+        dto.setUser(new UserDTO(project.getUser()));
         return dto;
     }
 

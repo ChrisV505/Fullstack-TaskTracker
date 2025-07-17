@@ -16,7 +16,7 @@ public class TaskMapper {
         dto.setPriority(task.getPriority());
         dto.setDueDate(task.getDueDate());
         dto.setCompleted(task.isCompleted());
-        dto.setProject(new ProjectDTO(task.getProject().getId(), task.getProject().getName()));
+        dto.setProject(new ProjectDTO(task.getProject()));
         return dto;
     }
 
