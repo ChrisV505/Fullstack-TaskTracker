@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.chrisV.tasktracker.backend.model.Project;
+import com.chrisV.tasktracker.backend.model.User;
 import com.chrisV.tasktracker.backend.repository.ProjectRepository;
+import com.chrisV.tasktracker.backend.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,9 @@ public class ProjectController {
     
     @Autowired
     private ProjectRepository projectRepo;
+
+    @Autowired
+    private UserRepository userRepo;
 
     //GET all projects
     @GetMapping
@@ -36,8 +41,17 @@ public class ProjectController {
 
     //POST one project entity
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
-        return projectRepo.save(project);
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        Long userId = project.getUser().getId();
+
+        Optional<User> userOpt = userRepo.findById(userId);
+        if(!userOpt.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        project.setUser((userOpt.get()));
+        Project savedProject = projectRepo.save(project);
+        return ResponseEntity.ok(savedProject);
     }
 
     //Update project entity by id
