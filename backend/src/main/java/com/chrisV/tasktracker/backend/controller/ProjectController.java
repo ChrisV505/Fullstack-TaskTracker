@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.chrisV.tasktracker.backend.dto.ProjectDTO;
+import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
 import com.chrisV.tasktracker.backend.mapper.ProjectMapper;
 import com.chrisV.tasktracker.backend.model.Project;
 import com.chrisV.tasktracker.backend.model.User;
@@ -27,11 +28,11 @@ public class ProjectController {
 
     //GET all projects
     @GetMapping
-    public List<ProjectDTO> getProjects() {
+    public List<SimpleProjectDTO> getProjects() {
         List<Project> projects = projectRepo.findAll();
 
         return projects.stream()
-                        .map(ProjectMapper::fromEntityProject)
+                        .map(ProjectMapper::fromEntityProjectSimplePj)
                         .collect(Collectors.toList());
     }
 
