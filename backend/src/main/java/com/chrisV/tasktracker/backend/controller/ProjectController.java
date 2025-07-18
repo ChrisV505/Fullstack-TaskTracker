@@ -44,8 +44,16 @@ public class ProjectController {
         if(!projectOpt.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(projectOpt.get());
+    }
+
+    //filter by user id
+    @GetMapping("/user/{userId}")
+    public List<SimpleProjectDTO> getProjectsByUser(@PathVariable Long userId) {
+        List<Project> projects = projectRepo.findByUserId(userId);
+        return projects.stream()
+                        .map(ProjectMapper::fromEntityProjectSimplePj)
+                        .collect(Collectors.toList());
     }
 
     //POST one project entity
