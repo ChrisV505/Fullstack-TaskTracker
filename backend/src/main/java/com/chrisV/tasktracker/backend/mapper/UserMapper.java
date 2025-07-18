@@ -13,5 +13,11 @@ public class UserMapper {
         return dto;
     }
 
-
+    //convert from DTO to entity
+    public static User toEntityUser(UserDTO dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        return user;
+    }
 }

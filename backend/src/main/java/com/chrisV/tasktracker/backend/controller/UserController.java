@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,9 @@ import com.chrisV.tasktracker.backend.mapper.UserMapper;
 import com.chrisV.tasktracker.backend.model.User;
 import com.chrisV.tasktracker.backend.repository.UserRepository;
 
+import jakarta.validation.Valid;
+
+@Validated
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -23,7 +27,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepo;
 
-    //GET all users
+    //GET all userDTO
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
         System.out.println("GET /api/users was called");
@@ -37,8 +41,12 @@ public class UserController {
         return ResponseEntity.badRequest().build();
     }
 
+    //post DTO from request to repo
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepo.save(user);
+    public UserDTO createUser(@RequestBody @Valid UserDTO userDTO) {
+        //save converted
+        User user = UserMapper.toEntityUser(userDTO);
+        userRepo.save(user);
+        return UserMapper.fromEntitySimpleUser(user);
     }
 }
