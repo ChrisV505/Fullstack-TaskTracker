@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.chrisV.tasktracker.backend.dto.SimpleTaskDTO;
 import com.chrisV.tasktracker.backend.dto.TaskDTO;
@@ -41,10 +40,23 @@ public class TaskController {
 
     //GET one task by Id
     @GetMapping("{id}")
-    public Task getTask(@PathVariable Long id) {
-        return taskRepo.findById(id)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task of ID: " + id + " does not exist"));
+    public ResponseEntity<SimpleTaskDTO> getTask(@PathVariable Long id) {
+        Task task = taskRepo.findById(id).orElseThrow(() -> new IllegalArgumentException(
+                                        "task of ID: " + id + " not found"));
+
+        if(task == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(TaskMapper.fromEntitySimpleTask(task));
     }
+
+    @GetMapping("project/{projectId}")
+        public List<SimpleTaskDTO> getTasksByProject(@PathVariable Long projectId) {
+            List<Task> tasks = taskRepo.findByProjectId(projectId);
+            return tasks.stream()
+                        .map(TaskMapper::fromEntitySimpleTask)
+                        .collect(Collectors.toList());
+        }
 
     //filter by priority
     @GetMapping("/filter")
