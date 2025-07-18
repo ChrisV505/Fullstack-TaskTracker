@@ -120,25 +120,25 @@ public class TaskController {
         return TaskMapper.fromEntityNestTask(saved);
     }
 
-@PatchMapping("/{id}")
-public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskDTO data) {
-    Task task = taskRepo.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found"));
+    @PatchMapping("/{id}")
+    public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskDTO data) {
+        Task task = taskRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found"));
 
-    if (data.getTitle() != null) task.setTitle(data.getTitle());
-    if(data.getDescription() != null) task.setDescription(data.getDescription());
-    if (data.getPriority() != null) task.setPriority(data.getPriority());
-    if (data.getDueDate() != null) task.setDueDate(data.getDueDate());
-    if (data.isCompleted() != null) task.setCompleted(data.isCompleted());
-    if (data.getProject() != null) {
-        Project project = projectRepo.findById(data.getProject().getId())
-            .orElseThrow(() -> new IllegalArgumentException("Project with ID " + data.getProject().getId() + " not found"));
-        task.setProject(project);
+        if (data.getTitle() != null) task.setTitle(data.getTitle());
+        if(data.getDescription() != null) task.setDescription(data.getDescription());
+        if (data.getPriority() != null) task.setPriority(data.getPriority());
+        if (data.getDueDate() != null) task.setDueDate(data.getDueDate());
+        if (data.isCompleted() != null) task.setCompleted(data.isCompleted());
+        if (data.getProject() != null) {
+            Project project = projectRepo.findById(data.getProject().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Project with ID " + data.getProject().getId() + " not found"));
+            task.setProject(project);
+        }
+
+        Task saved = taskRepo.save(task);
+        return TaskMapper.fromEntityNestTask(saved);
     }
-
-    Task saved = taskRepo.save(task);
-    return TaskMapper.fromEntityNestTask(saved);
-}
 
     //DELETE one task entity by id
     @DeleteMapping("/{id}")

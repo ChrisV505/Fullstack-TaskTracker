@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 //import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
 import com.chrisV.tasktracker.backend.mapper.ProjectMapper;
@@ -64,10 +65,16 @@ public class ProjectController {
 
     //Update project entity by id
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable Long id, @RequestBody Project data) {
-        Project project = projectRepo.findById(id).orElseThrow();
-        project.setName(data.getName());
-        return projectRepo.save(project);
+    public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO data) {
+        Project project = projectRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Project with ID: " + id + " not found"));
+        
+        User user = userRepo.findById(data.getUser().getId())
+            .orElseThrow(() -> new IllegalArgumentException("User with ID: " + data.getUser().getId() + " not found"));
+        //update existing project using DTO and User
+        ProjectMapper.updateProjectEntity(project, data, user);
+        Project saved = projectRepo.save(project);
+        return ProjectMapper.fromEntityProjectNestPj(saved);    
     }
 
     @DeleteMapping("/{id}")

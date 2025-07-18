@@ -4,6 +4,7 @@ import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
 import com.chrisV.tasktracker.backend.dto.UserDTO;
 import com.chrisV.tasktracker.backend.model.Project;
+import com.chrisV.tasktracker.backend.model.User;
 
 public class ProjectMapper {
     
@@ -21,6 +22,12 @@ public class ProjectMapper {
         dto.setUser(new UserDTO(project.getUser()));
         return dto;
     }
+
+    public static void updateProjectEntity(Project project, ProjectDTO dto, User user) {
+        project.setName(dto.getName());
+        project.setUser(user);
+    }
+
 
     
 
