@@ -71,7 +71,7 @@ public class ProjectController {
         return ResponseEntity.ok(savedProject);
     }
 
-    //Update project entity by id
+    //Update entire project entity by id 
     @PutMapping("/{id}")
     public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO data) {
         Project project = projectRepo.findById(id)
@@ -83,6 +83,22 @@ public class ProjectController {
         ProjectMapper.updateProjectEntity(project, data, user);
         Project saved = projectRepo.save(project);
         return ProjectMapper.fromEntityProjectNestUser(saved);    
+    }
+
+    //Update part of project by id
+    @PatchMapping("/{id}")
+    public ProjectDTO patchTask(@PathVariable Long id, @RequestBody ProjectDTO data) {
+        Project project = projectRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Project with ID: " + id + " not found"));
+
+        if(data.getName() != null) project.setName(data.getName());
+        if(data.getUser() != null) {
+            User user = userRepo.findById(data.getUser().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + id + " not found"));
+            project.setUser(user);
+        }
+        Project saved = projectRepo.save(project);
+        return ProjectMapper.fromEntityProjectNestUser(saved);
     }
 
     @DeleteMapping("/{id}")
