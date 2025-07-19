@@ -74,7 +74,7 @@ public class TaskController {
     public List<SimpleTaskDTO> filterbyPriorityAndCompletion(
         @RequestParam (defaultValue = "HIGH", required = false) String priority, 
         @RequestParam (defaultValue = "false", required = false) Boolean completed) {
-            
+
         Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
         List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, completed);
 
@@ -83,25 +83,25 @@ public class TaskController {
                     .collect(Collectors.toList());
     }
 
-    //sort by due date ASC order
-    @GetMapping("/sorted/asc")
-    public List<SimpleTaskDTO> sortByDueDateAsc() {
-        List<Task> tasks = taskRepo.findAllByOrderByDueDateAsc();
+    //sort by direction param
+    @GetMapping("/sort")
+    public ResponseEntity<List<SimpleTaskDTO>> sortByDueDateAsc(@RequestParam String direction) {
+        List<Task> tasks; 
 
-        return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleTask)
-                    .collect(Collectors.toList());
+        //fill tasks list depending on requestparam
+        if(direction.equals("asc")) tasks = taskRepo.findAllByOrderByDueDateAsc(); 
+        else if(direction.equals("desc")) tasks = taskRepo.findAllByOrderByDueDateDesc();
+        else return ResponseEntity.badRequest().build();
+
+        if(tasks.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(tasks.stream()
+                                    .map(TaskMapper::fromEntitySimpleTask)
+                                    .collect(Collectors.toList()));
+
     }
-
-    //sort by due date DESC order
-    @GetMapping("/sorted/desc")
-    public List<SimpleTaskDTO> sortByDueDateDes() {
-        List<Task> tasks = taskRepo.findAllByOrderByDueDateDesc();
-
-        return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleTask)
-                    .collect(Collectors.toList());
-    }    
 
     //POST one task entity
     @PostMapping
