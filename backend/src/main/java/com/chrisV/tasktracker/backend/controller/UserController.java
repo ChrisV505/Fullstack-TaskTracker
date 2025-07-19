@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chrisV.tasktracker.backend.Exception.ResourceNotFoundException;
+import com.chrisV.tasktracker.backend.dto.PatchUserDTO;
 import com.chrisV.tasktracker.backend.dto.UserDTO;
 import com.chrisV.tasktracker.backend.mapper.UserMapper;
 import com.chrisV.tasktracker.backend.model.User;
@@ -72,11 +74,16 @@ public class UserController {
         UserMapper.updateEntityUser(user, data);
         User saved = userRepo.save(user);
         return UserMapper.fromEntitySimpleUser(saved);
-
-
-
     }
 
+    @PatchMapping("/{id}")
+    public UserDTO patchUser(@PathVariable Long id, @Valid @RequestBody PatchUserDTO data) {
+        User user = userRepo.findById(id)
+                            .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + id  + " not found "));
+        if(data.getEmail() != null) user.setEmail(data.getEmail());
+        if(data.getName() != null) user.setName(data.getName());
 
-
+        User saved = userRepo.save(user);
+        return UserMapper.fromEntitySimpleUser(saved);
+    }
 }

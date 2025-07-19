@@ -16,7 +16,6 @@ public class UserMapper {
     //convert from DTO to entity
     public static User toEntityUser(UserDTO dto) {
         User user = new User();
-        user.setId(dto.getId());
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         return user;
