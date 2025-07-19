@@ -59,24 +59,24 @@ public class TaskController {
                         .collect(Collectors.toList());
         }
 
-    //filter by priority
-    @GetMapping("/filter")
-    public List<SimpleTaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
-        Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
-        List<Task> tasks = taskRepo.findByPriority(priorityEnum);
+    // //filter by priority
+    // @GetMapping("/filter")
+    // public List<SimpleTaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
+    //     Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
+    //     List<Task> tasks = taskRepo.findByPriority(priorityEnum);
 
-        return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleTask)
-                    .collect(Collectors.toList());
-    }
+    //     return tasks.stream()
+    //                 .map(TaskMapper::fromEntitySimpleTask)
+    //                 .collect(Collectors.toList());
+    // }
 
-    @GetMapping("/filter1") 
+    @GetMapping("/filter") 
     public List<SimpleTaskDTO> filterbyPriorityAndCompletion(
-        @RequestParam(defaultValue = "HIGH") String priority, 
-        @RequestParam (defaultValue = "false") Boolean Completed) {
-        
+        @RequestParam (defaultValue = "HIGH", required = false) String priority, 
+        @RequestParam (defaultValue = "false", required = false) Boolean completed) {
+            
         Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
-        List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, Completed);
+        List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, completed);
 
         return tasks.stream()
                     .map(TaskMapper::fromEntitySimpleTask)
