@@ -46,7 +46,7 @@ public class TaskMapper {
         return task;
     }
 
-    // Optional: update existing Task in-place instead of creating new one
+    // update existing Task in-place instead of creating new one
     public static void updateEntity(Task task, TaskDTO dto, Project project) {
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
