@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.chrisV.tasktracker.backend.Exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.dto.SimpleTaskDTO;
 import com.chrisV.tasktracker.backend.dto.TaskDTO;
 import com.chrisV.tasktracker.backend.mapper.TaskMapper;
@@ -41,7 +42,7 @@ public class TaskController {
     //GET one task by Id
     @GetMapping("{id}")
     public ResponseEntity<SimpleTaskDTO> getTask(@PathVariable Long id) {
-        Task task = taskRepo.findById(id).orElseThrow(() -> new IllegalArgumentException(
+        Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                                         "task of ID: " + id + " not found"));
 
         if(task == null) {
@@ -121,10 +122,10 @@ public class TaskController {
     @PutMapping("/{id}")
     public TaskDTO updateTask(@PathVariable Long id, @RequestBody TaskDTO data) {
         Task existingTask = taskRepo.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 
         Project project = projectRepo.findById(data.getProject().getId())
-            .orElseThrow(() -> new IllegalArgumentException("Project with ID " + data.getProject().getId() + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Project with ID " + data.getProject().getId() + " not found"));
         // Update the existing task in-place using the DTO and Project
         TaskMapper.updateEntity(existingTask, data, project);
 
@@ -135,7 +136,7 @@ public class TaskController {
     @PatchMapping("/{id}")
     public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskDTO data) {
         Task task = taskRepo.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Task with ID " + id + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 
         if (data.getTitle() != null) task.setTitle(data.getTitle());
         if(data.getDescription() != null) task.setDescription(data.getDescription());
@@ -144,7 +145,7 @@ public class TaskController {
         if (data.isCompleted() != null) task.setCompleted(data.isCompleted());
         if (data.getProject() != null) {
             Project project = projectRepo.findById(data.getProject().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Project with ID " + data.getProject().getId() + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Project with ID " + data.getProject().getId() + " not found"));
             task.setProject(project);
         }
 

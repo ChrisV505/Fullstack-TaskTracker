@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.chrisV.tasktracker.backend.Exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 //import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
@@ -33,26 +34,25 @@ public class ProjectController {
         List<Project> projects = projectRepo.findAll();
 
         return projects.stream()
-                        .map(ProjectMapper::fromEntityProjectSimplePj)
+                        .map(ProjectMapper::fromEntityProjectSimple)
                         .collect(Collectors.toList());
     }
 
     //GET one project data
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectWithTasks(@PathVariable Long id) {
-        Optional<Project> projectOpt = projectRepo.findById(id);
-        if(!projectOpt.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(projectOpt.get());
+    public ResponseEntity<SimpleProjectDTO> getProjectWithTasks(@PathVariable Long id) {
+        Project project = projectRepo.findById(id).orElseThrow(() 
+                        -> new ResourceNotFoundException("Project with id: " + id + " not found"));
+        return ResponseEntity.ok(ProjectMapper.fromEntityProjectSimple(project));
     }
 
     //filter by user id
     @GetMapping("/user/{userId}")
     public List<SimpleProjectDTO> getProjectsByUser(@PathVariable Long userId) {
         List<Project> projects = projectRepo.findByUserId(userId);
+
         return projects.stream()
-                        .map(ProjectMapper::fromEntityProjectSimplePj)
+                        .map(ProjectMapper::fromEntityProjectSimple)
                         .collect(Collectors.toList());
     }
 
@@ -75,14 +75,14 @@ public class ProjectController {
     @PutMapping("/{id}")
     public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO data) {
         Project project = projectRepo.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Project with ID: " + id + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Project with ID: " + id + " not found"));
         
         User user = userRepo.findById(data.getUser().getId())
-            .orElseThrow(() -> new IllegalArgumentException("User with ID: " + data.getUser().getId() + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + data.getUser().getId() + " not found"));
         //update existing project using DTO and User
         ProjectMapper.updateProjectEntity(project, data, user);
         Project saved = projectRepo.save(project);
-        return ProjectMapper.fromEntityProjectNestPj(saved);    
+        return ProjectMapper.fromEntityProjectNestUser(saved);    
     }
 
     @DeleteMapping("/{id}")
@@ -90,6 +90,6 @@ public class ProjectController {
         projectRepo.existsById(id);
         projectRepo.deleteById(id);
 
-        throw new IllegalArgumentException("project with Id: " + id + " does not exist");
+        throw new ResourceNotFoundException("project with Id: " + id + " does not exist");
     }
 }

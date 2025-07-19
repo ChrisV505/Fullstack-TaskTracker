@@ -8,20 +8,22 @@ import com.chrisV.tasktracker.backend.model.User;
 
 public class ProjectMapper {
     
-    public static SimpleProjectDTO fromEntityProjectSimplePj(Project project) {
+    public static SimpleProjectDTO fromEntityProjectSimple(Project project) {
         SimpleProjectDTO dto = new SimpleProjectDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
         return dto;
     }
 
-    public static ProjectDTO fromEntityProjectNestPj(Project project) {
+    public static ProjectDTO fromEntityProjectNestUser(Project project) {
         ProjectDTO dto = new ProjectDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
         dto.setUser(new UserDTO(project.getUser()));
         return dto;
     }
+
+
 
     public static void updateProjectEntity(Project project, ProjectDTO dto, User user) {
         project.setName(dto.getName());
