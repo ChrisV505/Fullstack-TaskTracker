@@ -41,7 +41,7 @@ public class TaskMapper {
         task.setDescription(dto.getDescription());
         task.setPriority(dto.getPriority());
         task.setDueDate(dto.getDueDate());
-        task.setCompleted(dto.isCompleted());
+        task.setCompleted(dto.getCompleted());
         task.setProject(project);
         return task;
     }
@@ -52,7 +52,7 @@ public class TaskMapper {
         task.setDescription(dto.getDescription());
         task.setPriority(dto.getPriority());
         task.setDueDate(dto.getDueDate());
-        task.setCompleted(dto.isCompleted());
+        task.setCompleted(dto.getCompleted());
         task.setProject(project);
     }
 }

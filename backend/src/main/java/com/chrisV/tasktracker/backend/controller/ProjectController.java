@@ -14,6 +14,8 @@ import com.chrisV.tasktracker.backend.model.User;
 import com.chrisV.tasktracker.backend.repository.ProjectRepository;
 import com.chrisV.tasktracker.backend.repository.UserRepository;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,12 +75,13 @@ public class ProjectController {
 
     //Update entire project entity by id 
     @PutMapping("/{id}")
-    public ProjectDTO updateProject(@PathVariable Long id, @RequestBody ProjectDTO data) {
+    public ProjectDTO updateProject(@PathVariable Long id, @Valid @RequestBody ProjectDTO data) {
         Project project = projectRepo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Project with ID: " + id + " not found"));
         
         User user = userRepo.findById(data.getUser().getId())
             .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + data.getUser().getId() + " not found"));
+
         //update existing project using DTO and User
         ProjectMapper.updateProjectEntity(project, data, user);
         Project saved = projectRepo.save(project);
@@ -87,7 +90,7 @@ public class ProjectController {
 
     //Update part of project by id
     @PatchMapping("/{id}")
-    public SimpleProjectDTO patchTask(@PathVariable Long id, @RequestBody ProjectDTO data) {
+    public SimpleProjectDTO patchTask(@PathVariable Long id, @Valid @RequestBody ProjectDTO data) {
         Project project = projectRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project with ID: " + id + " not found"));
 

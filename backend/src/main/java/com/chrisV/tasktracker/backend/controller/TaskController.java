@@ -142,7 +142,7 @@ public class TaskController {
         if(data.getDescription() != null) task.setDescription(data.getDescription());
         if (data.getPriority() != null) task.setPriority(data.getPriority());
         if (data.getDueDate() != null) task.setDueDate(data.getDueDate());
-        if (data.isCompleted() != null) task.setCompleted(data.isCompleted());
+        if (data.getCompleted() != null) task.setCompleted(data.getCompleted());
         if (data.getProject() != null) {
             Project project = projectRepo.findById(data.getProject().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Project with ID " + data.getProject().getId() + " not found"));
