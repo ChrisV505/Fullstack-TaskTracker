@@ -1,4 +1,4 @@
-package com.chrisV.tasktracker.backend.Exception;
+package com.chrisV.tasktracker.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

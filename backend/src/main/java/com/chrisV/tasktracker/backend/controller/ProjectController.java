@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.chrisV.tasktracker.backend.Exception.ResourceNotFoundException;
+import com.chrisV.tasktracker.backend.dto.PatchProjectDTO;
 import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 //import com.chrisV.tasktracker.backend.dto.ProjectDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleProjectDTO;
+import com.chrisV.tasktracker.backend.exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.mapper.ProjectMapper;
 import com.chrisV.tasktracker.backend.model.Project;
 import com.chrisV.tasktracker.backend.model.User;
@@ -90,7 +91,7 @@ public class ProjectController {
 
     //Update part of project by id
     @PatchMapping("/{id}")
-    public SimpleProjectDTO patchTask(@PathVariable Long id, @Valid @RequestBody ProjectDTO data) {
+    public ProjectDTO patchTask(@PathVariable Long id, @Valid @RequestBody PatchProjectDTO data) {
         Project project = projectRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project with ID: " + id + " not found"));
 
@@ -101,7 +102,7 @@ public class ProjectController {
             project.setUser(user);
         }
         Project saved = projectRepo.save(project);
-        return ProjectMapper.fromEntityProjectSimple(saved);
+        return ProjectMapper.fromEntityProjectNestUser(saved);
     }
 
     @DeleteMapping("/{id}")

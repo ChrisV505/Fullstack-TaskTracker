@@ -5,9 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.chrisV.tasktracker.backend.Exception.ResourceNotFoundException;
+import com.chrisV.tasktracker.backend.dto.PatchTaskDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleTaskDTO;
 import com.chrisV.tasktracker.backend.dto.TaskDTO;
+import com.chrisV.tasktracker.backend.exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.mapper.TaskMapper;
 import com.chrisV.tasktracker.backend.model.Priority;
 import com.chrisV.tasktracker.backend.model.Project;
@@ -125,12 +126,12 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    public TaskDTO patchTask(@PathVariable Long id, @Valid @RequestBody TaskDTO data) {
+    public TaskDTO patchTask(@PathVariable Long id, @Valid @RequestBody PatchTaskDTO data) {
         Task task = taskRepo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 
         if (data.getTitle() != null) task.setTitle(data.getTitle());
-        if(data.getDescription() != null) task.setDescription(data.getDescription());
+        if (data.getDescription() != null) task.setDescription(data.getDescription());
         if (data.getPriority() != null) task.setPriority(data.getPriority());
         if (data.getDueDate() != null) task.setDueDate(data.getDueDate());
         if (data.getCompleted() != null) task.setCompleted(data.getCompleted());

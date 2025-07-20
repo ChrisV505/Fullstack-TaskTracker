@@ -30,7 +30,7 @@ public class TaskDTO {
     @NotNull(message = "Completion is required")
     private Boolean completed;
 
-    @Future(message = "DueDate must be valid")
+    @Future(message = "DueDate cannot be in the past")
     @NotNull(message = "DueDate is required")
     private LocalDate dueDate;
     

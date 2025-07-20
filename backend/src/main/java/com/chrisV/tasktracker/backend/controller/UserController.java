@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chrisV.tasktracker.backend.Exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.dto.PatchUserDTO;
 import com.chrisV.tasktracker.backend.dto.UserDTO;
+import com.chrisV.tasktracker.backend.exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.mapper.UserMapper;
 import com.chrisV.tasktracker.backend.model.User;
 import com.chrisV.tasktracker.backend.repository.UserRepository;
