@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chrisV.tasktracker.backend.dto.PatchUserDTO;
 import com.chrisV.tasktracker.backend.dto.UserDTO;
+import com.chrisV.tasktracker.backend.exception.DuplicateEmailException;
 import com.chrisV.tasktracker.backend.exception.ResourceNotFoundException;
 import com.chrisV.tasktracker.backend.mapper.UserMapper;
 import com.chrisV.tasktracker.backend.model.User;
@@ -62,7 +64,11 @@ public class UserController {
     public UserDTO createUser(@RequestBody @Valid UserDTO userDTO) {
         //save converted
         User user = UserMapper.toEntityUser(userDTO);
-        userRepo.save(user);
+        try{
+            userRepo.save(user);
+        } catch(DataIntegrityViolationException e) {
+            throw new DuplicateEmailException("Email already exist");
+        }
         return UserMapper.fromEntitySimpleUser(user);
     }
 

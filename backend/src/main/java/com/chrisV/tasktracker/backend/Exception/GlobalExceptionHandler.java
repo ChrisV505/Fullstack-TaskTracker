@@ -19,4 +19,12 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateEmail(DuplicateEmailException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Email already exist");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
 }

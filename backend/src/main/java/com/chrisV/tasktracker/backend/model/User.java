@@ -15,6 +15,8 @@ public class User {
     private Long id;
 
     private String name;
+
+    @Column(unique = true) //Unique emails only
     private String email;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
