@@ -15,6 +15,8 @@ import com.chrisV.tasktracker.backend.model.Task;
 import com.chrisV.tasktracker.backend.repository.ProjectRepository;
 import com.chrisV.tasktracker.backend.repository.TaskRepository;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,17 +60,6 @@ public class TaskController {
                         .map(TaskMapper::fromEntitySimpleTask)
                         .collect(Collectors.toList());
         }
-
-    // //filter by priority
-    // @GetMapping("/filter")
-    // public List<SimpleTaskDTO> filterByPriority(@RequestParam(defaultValue = "HIGH")String priority) {
-    //     Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
-    //     List<Task> tasks = taskRepo.findByPriority(priorityEnum);
-
-    //     return tasks.stream()
-    //                 .map(TaskMapper::fromEntitySimpleTask)
-    //                 .collect(Collectors.toList());
-    // }
 
     @GetMapping("/filter") 
     public List<SimpleTaskDTO> filterbyPriorityAndCompletion(
@@ -120,7 +111,7 @@ public class TaskController {
 
     //UPDATE one task entity by id
     @PutMapping("/{id}")
-    public TaskDTO updateTask(@PathVariable Long id, @RequestBody TaskDTO data) {
+    public TaskDTO updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO data) {
         Task existingTask = taskRepo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 
@@ -134,7 +125,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    public TaskDTO patchTask(@PathVariable Long id, @RequestBody TaskDTO data) {
+    public TaskDTO patchTask(@PathVariable Long id, @Valid @RequestBody TaskDTO data) {
         Task task = taskRepo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
 
