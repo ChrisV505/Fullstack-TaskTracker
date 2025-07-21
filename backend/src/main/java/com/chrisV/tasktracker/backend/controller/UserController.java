@@ -1,10 +1,9 @@
 package com.chrisV.tasktracker.backend.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chrisV.tasktracker.backend.dto.PatchUserDTO;
 import com.chrisV.tasktracker.backend.dto.UserDTO;
-import com.chrisV.tasktracker.backend.exception.DuplicateEmailException;
-import com.chrisV.tasktracker.backend.exception.ResourceNotFoundException;
-import com.chrisV.tasktracker.backend.mapper.UserMapper;
-import com.chrisV.tasktracker.backend.model.User;
-import com.chrisV.tasktracker.backend.repository.UserRepository;
+import com.chrisV.tasktracker.backend.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -30,66 +25,39 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    
+
     @Autowired
-    private UserRepository userRepo;
+    private UserService userService;
 
     //GET all userDTO
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
-        System.out.println("GET /api/users was called");
-        List<User> users = userRepo.findAll();
-        
-        if(!users.isEmpty()){
-        return ResponseEntity.ok(users.stream()
-                            .map(UserMapper::fromEntitySimpleUser)
-                            .collect(Collectors.toList()));
-        }
-        return ResponseEntity.badRequest().build();
+        List<UserDTO> users = userService.getUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserByID(@PathVariable Long id) {
-        User user = userRepo.findById(id).orElseThrow(() 
-                        -> new ResourceNotFoundException("User with Id: " + id + " not found"));
-        
-        if(user == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(UserMapper.fromEntitySimpleUser(user));
+        UserDTO userDTO = userService.getUserById(id);
+        return ResponseEntity.ok(userDTO);
     }
 
     //post DTO from request to repo
     @PostMapping
-    public UserDTO createUser(@RequestBody @Valid UserDTO userDTO) {
-        //save converted
-        User user = UserMapper.toEntityUser(userDTO);
-        try{
-            userRepo.save(user);
-        } catch(DataIntegrityViolationException e) {
-            throw new DuplicateEmailException("Email already exist");
-        }
-        return UserMapper.fromEntitySimpleUser(user);
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
+        UserDTO createdUser = userService.registerUser(userDTO);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO data) {
-        User user = userRepo.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("User with Id: " + id + " not found"));
-
-        UserMapper.updateEntityUser(user, data);
-        User saved = userRepo.save(user);
-        return UserMapper.fromEntitySimpleUser(saved);
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO data) {
+        UserDTO dto = userService.updateUser(id, data);
+        return ResponseEntity.ok(dto);
     }
 
     @PatchMapping("/{id}")
-    public UserDTO patchUser(@PathVariable Long id, @Valid @RequestBody PatchUserDTO data) {
-        User user = userRepo.findById(id)
-                            .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + id  + " not found "));
-        if(data.getEmail() != null) user.setEmail(data.getEmail());
-        if(data.getName() != null) user.setName(data.getName());
-
-        User saved = userRepo.save(user);
-        return UserMapper.fromEntitySimpleUser(saved);
+    public ResponseEntity<UserDTO> patchUser(@PathVariable Long id, @Valid @RequestBody PatchUserDTO data) {
+        UserDTO patchedUser = userService.patchUser(id, data);
+        return ResponseEntity.ok(patchedUser);
     }
 }
