@@ -23,7 +23,13 @@ public class ProjectMapper {
         return dto;
     }
 
-
+    public static Project toEntityProjectNestUser(ProjectDTO dto, User user) {
+        Project project = new Project();
+        project.setId(dto.getId());
+        project.setName(dto.getName());
+        project.setUser(user);
+        return project;
+    }
 
     public static void updateProjectEntity(Project project, ProjectDTO dto, User user) {
         project.setName(dto.getName());
