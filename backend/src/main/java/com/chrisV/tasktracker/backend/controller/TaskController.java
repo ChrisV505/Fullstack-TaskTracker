@@ -1,26 +1,17 @@
 package com.chrisV.tasktracker.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.chrisV.tasktracker.backend.dto.PatchTaskDTO;
 import com.chrisV.tasktracker.backend.dto.SimpleTaskDTO;
 import com.chrisV.tasktracker.backend.dto.TaskDTO;
-import com.chrisV.tasktracker.backend.exception.ResourceNotFoundException;
-import com.chrisV.tasktracker.backend.mapper.TaskMapper;
-import com.chrisV.tasktracker.backend.model.Priority;
-import com.chrisV.tasktracker.backend.model.Project;
-import com.chrisV.tasktracker.backend.model.Task;
-import com.chrisV.tasktracker.backend.repository.ProjectRepository;
-import com.chrisV.tasktracker.backend.repository.TaskRepository;
+import com.chrisV.tasktracker.backend.service.TaskService;
 
 import jakarta.validation.Valid;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -28,130 +19,70 @@ import java.util.stream.Collectors;
 public class TaskController {
 
     @Autowired
-    private TaskRepository taskRepo;
+    private TaskService taskService;
 
-    @Autowired
-    private ProjectRepository projectRepo;
 
     //GET all tasks data
     @GetMapping
-    public List<SimpleTaskDTO> getTasks() {
-        List<Task> tasks = taskRepo.findAll();
-        return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleTask)
-                    .collect(Collectors.toList());
+    public ResponseEntity<List<SimpleTaskDTO>> getTasks() {
+        List<SimpleTaskDTO> tasks = taskService.getTasks();
+        return ResponseEntity.ok(tasks);
     }
 
     //GET one task by Id
     @GetMapping("{id}")
     public ResponseEntity<SimpleTaskDTO> getTask(@PathVariable Long id) {
-        Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                                        "task of ID: " + id + " not found"));
-
-        if(task == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(TaskMapper.fromEntitySimpleTask(task));
+        SimpleTaskDTO task = taskService.getTaskById(id);
+        return ResponseEntity.ok(task);
     }
 
+    //get task by projec id
     @GetMapping("project/{projectId}")
-        public List<SimpleTaskDTO> getTasksByProject(@PathVariable Long projectId) {
-            List<Task> tasks = taskRepo.findByProjectId(projectId);
-            return tasks.stream()
-                        .map(TaskMapper::fromEntitySimpleTask)
-                        .collect(Collectors.toList());
+        public ResponseEntity<List<SimpleTaskDTO>> getTasksByProject(@PathVariable Long projectId) {
+            List<SimpleTaskDTO> tasks = taskService.getTasksByProject(projectId);
+            return ResponseEntity.ok(tasks);
         }
 
     @GetMapping("/filter") 
-    public List<SimpleTaskDTO> filterbyPriorityAndCompletion(
+    public ResponseEntity<List<SimpleTaskDTO>> filterbyPriorityAndCompletion(
         @RequestParam (defaultValue = "HIGH", required = false) String priority, 
         @RequestParam (defaultValue = "false", required = false) Boolean completed) {
 
-        Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
-        List<Task> tasks = taskRepo.findByPriorityAndCompleted(priorityEnum, completed);
-
-        return tasks.stream()
-                    .map(TaskMapper::fromEntitySimpleTask)
-                    .collect(Collectors.toList());
+        List<SimpleTaskDTO> tasks = taskService.filterbyPriorityAndCompletion(priority, completed);
+        return ResponseEntity.ok(tasks);
     }
 
     //sort by direction param
     @GetMapping("/sort")
-    public ResponseEntity<List<SimpleTaskDTO>> sortByDueDateAsc(@RequestParam String direction) {
-        List<Task> tasks; 
-
-        //fill tasks list depending on requestparam
-        if(direction.equals("asc")) tasks = taskRepo.findAllByOrderByDueDateAsc(); 
-        else if(direction.equals("desc")) tasks = taskRepo.findAllByOrderByDueDateDesc();
-        else return ResponseEntity.badRequest().build();
-
-        if(tasks.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(tasks.stream()
-                                    .map(TaskMapper::fromEntitySimpleTask)
-                                    .collect(Collectors.toList()));
-
+    public ResponseEntity<List<SimpleTaskDTO>> sortByDueDateDirection(@RequestParam String direction) {
+        List<SimpleTaskDTO> tasks = taskService.sortByDueDateDirection(direction);
+        return ResponseEntity.ok(tasks);
     }
 
     //POST one task entity
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Long projectId = task.getProject().getId();
-
-        Optional<Project> projectOpt = projectRepo.findById(projectId);
-        if(!projectOpt.isPresent()) {
-            return ResponseEntity.badRequest().build() ;
-        }
-        
-        task.setProject((projectOpt.get()));
-        Task savedTask = taskRepo.save(task);
-        return ResponseEntity.ok(savedTask);
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO dto) {
+        TaskDTO task = taskService.registerTask(dto);
+        return ResponseEntity.ok(task);
     }
 
     //UPDATE one task entity by id
     @PutMapping("/{id}")
-    public TaskDTO updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO data) {
-        Task existingTask = taskRepo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
-
-        Project project = projectRepo.findById(data.getProject().getId())
-            .orElseThrow(() -> new ResourceNotFoundException("Project with ID " + data.getProject().getId() + " not found"));
-        // Update the existing task in-place using the DTO and Project
-        TaskMapper.updateEntity(existingTask, data, project);
-
-        Task saved = taskRepo.save(existingTask);
-        return TaskMapper.fromEntityNestTask(saved);
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO data) {
+        TaskDTO task = taskService.updateTask(id, data);
+        return ResponseEntity.ok(task);
     }
 
     @PatchMapping("/{id}")
-    public TaskDTO patchTask(@PathVariable Long id, @Valid @RequestBody PatchTaskDTO data) {
-        Task task = taskRepo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " not found"));
-
-        if (data.getTitle() != null) task.setTitle(data.getTitle());
-        if (data.getDescription() != null) task.setDescription(data.getDescription());
-        if (data.getPriority() != null) task.setPriority(data.getPriority());
-        if (data.getDueDate() != null) task.setDueDate(data.getDueDate());
-        if (data.getCompleted() != null) task.setCompleted(data.getCompleted());
-        if (data.getProject() != null) {
-            Project project = projectRepo.findById(data.getProject().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Project with ID " + data.getProject().getId() + " not found"));
-            task.setProject(project);
-        }
-
-        Task saved = taskRepo.save(task);
-        return TaskMapper.fromEntityNestTask(saved);
+    public ResponseEntity<TaskDTO> patchTask(@PathVariable Long id, @Valid @RequestBody PatchTaskDTO data) {
+        TaskDTO task = taskService.patchTask(id, data);
+        return ResponseEntity.ok(task);
     }
 
     //DELETE one task entity by id
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
-        if(taskRepo.existsById(id)) {
-            taskRepo.deleteById(id);
-            return ResponseEntity.ok("task deleted");
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not foud");
+        boolean deleted = taskService.deleteTask(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
