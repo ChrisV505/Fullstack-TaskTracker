@@ -83,7 +83,7 @@ public class ProjectService {
     }
 
     public boolean deleteProject(Long id) {
-        if(projectRepo.existsById(id)) return false;
+        if(!projectRepo.existsById(id)) return false;
         projectRepo.deleteById(id);
         return true;
     }

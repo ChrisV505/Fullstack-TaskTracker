@@ -74,4 +74,10 @@ public class UserService {
         }
         return UserMapper.fromEntitySimpleUser(saved);
     }
+
+    public boolean deleteProject(Long id) {
+        if(!userRepo.existsById(id)) return false;
+        userRepo.deleteById(id);
+        return true;
+    }
 }
