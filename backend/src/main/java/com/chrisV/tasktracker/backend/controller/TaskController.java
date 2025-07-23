@@ -21,7 +21,6 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-
     //GET all tasks data
     @GetMapping
     public ResponseEntity<List<SimpleTaskDTO>> getTasks() {
