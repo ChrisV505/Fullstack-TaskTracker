@@ -1,24 +1,42 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios';
+import './App.css';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/tasks")
-    .then(res => res.json())
-    .then(data => setTasks(data));
+    axios.get('http://localhost:8080/api/users')
+    .then(response => {
+      setUsers(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching users:', error);
+    })
   }, []);
 
   return (
     <div>
       <h1>Task Tracker</h1>
       <p>Starting to build for taskTracker</p>
-      <ul>
-        {tasks.map(task => (
-          <li key={task.id}>{task.title}</li>
-        ))}
-      </ul>
+
+      <table border="1" cellPadding="8" cellSpacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {users.map(user => (
+            <tr key={user.id}>
+              <td>{user.id}</td>
+              <td>{user.email}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
